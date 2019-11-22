@@ -40,7 +40,7 @@ const Container = styled.div`
    flex-direction: column;
 `;
 const makeDefaultState = (selected) => ({
-  selectedEmployee: selected,
+  selectedEmployee: selected ? selected : {},
   filtered: []
 });
 
@@ -50,24 +50,47 @@ class EmployeeAttributes extends React.Component {
     this.state =  makeDefaultState(this.props.selectedContractor);
  
     this.renderCell = this.renderCell.bind(this);
+    this._onBlur = this._onBlur.bind(this);
   }
 
+  _onBlur(){
+    console.log("on blur");
+    let propCopy = {...this.props.selectedEmployee};
+    for (var key in this.state.selectedEmployee){
+        if (key in propCopy ){
+           propCopy[key] = this.state.selectedEmployee[key]; 
+        }
+        
+    }
+    new Promise(() => {
+        this.props.setSelected(propCopy, 'employee')
+    }).then(
+        this.setState({
+          selectedEmployee: {}
+        })
+    ); 
+}
   _handleSelectionEvent(val) {
     console.log(val);
-    this.props.setSelected(val, 'employee')
+    
+    this.setState({
+      filtered: [],
+      selectedEmployee: {}
+    }, () => this.props.setSelected(val, 'employee'));
   }
   _handleChangeEvent(val) {
     console.log("_handleChangeEvent val is: ", val.target);
-    let stateCopy = { ...this.props.selectedEmployee };
+    let stateCopy = { ...this.state.selectedEmployee };
     stateCopy[val.target.id] = val.target.value;
     // val['Contractor']
     // this.setState({          
     //     ..,
     //     contractor: this.props.selectedContractor['Contractor'] ? this.props.selectedContractor['Contractor'] : ""
     // });
-    this.props.setSelected(stateCopy, 'employee');
+    //this.props.setSelected(stateCopy, 'employee');
     this.setState({
-      filtered: []
+      filtered: [],
+      selectedEmployee: stateCopy
     });
     this._activateSaveButton();
     return val.target.value;
@@ -106,6 +129,16 @@ class EmployeeAttributes extends React.Component {
 
     return val.target.value;
   }
+  // componentDidUpdate(prevProps){
+  //       console.log("component didupate(): \n\tprevProps.selectedEmployee: ", prevProps.selectedEmployee, "\n\tthis.props.selectedEmployee: ", this.props.selectedEmployee)
+  //       if(prevProps.selectedEmployee !== this.props.selectedEmployee){
+  //           console.log("setting component's state")
+  //           this.setState({          
+  //               selectedEmployee: this.props.selectedEmployee, 
+  //               filtered: []
+  //           });
+  //       }
+  //   }
 
   renderCell(cellInfo) {
     
@@ -171,36 +204,66 @@ class EmployeeAttributes extends React.Component {
                       <Col sm="4" className="d-flex align-items-left" >
                         <FormControl fullWidth>
                           <FormControlLabel style={{ minWidth: '160px', textAlign: 'left', paddingLeft: '5' }}>Name</FormControlLabel>
-                          <TextField id="Name" value={this._getAttribute('Name')}
-                            onChange={this._handleChangeEvent.bind(this)} fullWidth type="textarea"
+                          <TextField id="Name" 
+                            value={!(Object.keys(this.state.selectedEmployee).length > 0) ?
+                              this._getAttribute('Name') :
+                              this.state.selectedEmployee['Name']
+                            }
+                          //value={this._getAttribute('Name')}
+                            onChange={this._handleChangeEvent.bind(this)}
+                            onBlur={this._onBlur.bind(this)} fullWidth type="textarea"
                             style={{ resize: 'both', maxHeight: '100%', height: '36px' }}
                           >
                           </TextField>
                         </FormControl>
                         <FormControl >
                           <FormControlLabel style={{ minWidth: '160px', textAlign: 'left', paddingLeft: '5' }}>Employee ID</FormControlLabel>
-                          <TextField id="Employee_ID" value={this._getAttribute('Employee_ID')}
-                            onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                          <TextField id="Employee_ID" 
+                            value={!(Object.keys(this.state.selectedEmployee).length > 0) ?
+                              this._getAttribute('Employee_ID') :
+                              this.state.selectedEmployee['Employee_ID']
+                            }
+                            onChange={this._handleChangeEvent.bind(this)}
+                            //value={this._getAttribute('Employee_ID')}
+                            onBlur={this._onBlur.bind(this)} fullWidth>
                           </TextField>
                         </FormControl>
                       </Col>
                       <Col sm="8" className="d-flex align-items-left">
                         <FormControl >
                           <FormControlLabel style={{ width: '120px', textAlign: 'left', paddingLeft: '3' }} >Office Number</FormControlLabel>
-                          <TextField id="OfficeNumber" value={this._getAttribute('OfficeNumber')}
-                            onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                          <TextField id="OfficeNumber" 
+                            value={!(Object.keys(this.state.selectedEmployee).length > 0) ?
+                              this._getAttribute('OfficeNumber') :
+                              this.state.selectedEmployee['OfficeNumber']
+                            }
+                            onChange={this._handleChangeEvent.bind(this)}
+                            //value={this._getAttribute('OfficeNumber')}
+                            onBlur={this._onBlur.bind(this)} fullWidth>
                           </TextField>
                         </FormControl>
                         <FormControl >
                           <FormControlLabel style={{ width: '160px', textAlign: 'left', paddingLeft: '3' }}>Cell Number</FormControlLabel>
-                          <TextField id="CellNumber" value={this._getAttribute('CellNumber')}
-                            onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                          <TextField id="CellNumber" 
+                            value={!(Object.keys(this.state.selectedEmployee).length > 0) ?
+                              this._getAttribute('CellNumber') :
+                              this.state.selectedEmployee['CellNumber']
+                            }
+                            onChange={this._handleChangeEvent.bind(this)}
+                            //value={this._getAttribute('CellNumber')}
+                            onBlur={this._onBlur.bind(this)} fullWidth>
                           </TextField>
                         </FormControl>
                         <FormControl >
                           <FormControlLabel style={{ width: '80px', textAlign: 'left', paddingLeft: '1' }}>Email</FormControlLabel>
-                          <TextField id="Email" value={this._getAttribute('Email')}
-                            onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                          <TextField id="Email" 
+                            value={!(Object.keys(this.state.selectedEmployee).length > 0) ?
+                              (this._getAttribute('Email') ? this._getAttribute('Email') : "") :
+                              this.state.selectedEmployee['Email']
+                            }
+                            onChange={this._handleChangeEvent.bind(this)}
+                            //value={this._getAttribute('Email')}
+                            onBlur={this._onBlur.bind(this)} fullWidth>
                           </TextField>
                         </FormControl>
                       </Col>

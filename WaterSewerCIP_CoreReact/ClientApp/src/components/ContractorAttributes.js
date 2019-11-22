@@ -127,7 +127,8 @@ class ContractorAttributes extends Component{
                                         <Col sm="4"  className="d-flex align-items-left" >
                                             <FormControl fullWidth>
                                                 <FormControlLabel style={{ minWidth: '160px', textAlign: 'left', paddingLeft: '5' }}>Company Name</FormControlLabel>
-                                                <TextField id="Contractor" value={this._getAttribute('Contractor')}
+                                                <TextField id="Contractor" 
+                                                    value={this._getAttribute('Contractor')}
                                                     onChange={this._handleChangeEvent.bind(this)} fullWidth type="textarea"
                                                     style={{ resize: 'both', maxHeight: '100%', height: '36px' }}
                                                 >
@@ -310,11 +311,11 @@ const mapStateToProps = state => ({
     contractors: parseContractorData(state),
     selectedContractor: state.attributes.selectedContractor,
     isVisible: state.map.attributesComponent,
-    card: state.attributes.card,
-    featureURLs: state.config.featureURLs,
+    //card: state.attributes.card,
+    //featureURLs: state.config.featureURLs,
     saveButton: state.attributes.saveButton,
-    domains: parseDomainValues(state),
-    optionsManagers: state.map.managers,
+    //domains: parseDomainValues(state),
+    //optionsManagers: state.map.managers,
     fields: getColumnsFromFields(state, "contractors"),
 });
 
