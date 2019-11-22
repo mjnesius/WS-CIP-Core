@@ -1,0 +1,72 @@
+{
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "http://tipdbt2/WaterSewerProjects/",
+  "dependencies": {
+    "@esri/arcgis-rest-auth": "^2.4.0",
+    "@esri/arcgis-rest-feature-layer": "^2.4.0",
+    "@esri/arcgis-rest-request": "^2.4.0",
+    "@esri/calcite-ui-icons": "^2.5.1",
+    "bootstrap": "^4.3.1",
+    "calcite-react": "^0.40.0",
+    "calcite-ui-icons-react": "^0.7.2",
+    "classnames": "^2.2.6",
+    "cross-fetch": "^3.0.4",
+    "eslint": "^6.1.0",
+    "esri-loader": "^2.10.0",
+    "isomorphic-form-data": "^2.0.0",
+    "json": "^9.0.6",
+    "moment": "^2.24.0",
+    "react": "^16.9.0",
+    "react-bootstrap": "^1.0.0-beta.12",
+    "react-dom": "^16.9.0",
+    "react-localize-redux": "^3.5.3",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-select": "^3.0.7",
+    "react-table": "^6.10.3",
+    "react-transition-group": "^4.2.2",
+    "redux": "^4.0.4",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.0.5",
+    "reselect": "^4.0.0",
+    "styled-components": "^4.3.2",
+    "underscore": "^1.9.1",
+    "validator": "^11.1.0"
+  },
+  "devDependencies": {
+    "ajv": "^6.0.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^6.1.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.50.3",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "react-scripts": "^3.1.1"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "rimraf ./build && react-scripts start",
+    "build": "react-scripts build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "development": [
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 edge versions"
+    ],
+    "production": [
+      ">1%",
+      "last 4 versions",
+      "Firefox ESR",
+      "not ie < 11"
+    ]
+  }
+}

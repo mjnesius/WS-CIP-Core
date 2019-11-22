@@ -1,0 +1,15 @@
+{
+  "short_name": "Water-Sewer CIP",
+  "name": "Water-Sewer CIP, built with esri-react-boot and .NET Core",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "2438x484",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

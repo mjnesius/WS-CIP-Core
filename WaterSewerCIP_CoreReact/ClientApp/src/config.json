@@ -1,0 +1,35 @@
+{
+  "appVersion": "0.0.1",
+
+  "apiUrl": "api",
+  "loginUrl": "api/auth/arcgis",
+  "logoutUrl": "api/logout",
+  "jsapiUrl": "https://js.arcgis.com/4.13/",
+  "jsapiV4": true,
+  "loginWithPopup": false,
+
+  "portalUrl": "https://tlcgis.maps.arcgis.com",
+  "appId": "hkdtqXBMmZ8JJ5tD",
+
+  "mapConfig": {
+    "id": "298570bdb8e946a1b7969bdebc3f4e6e",
+    "zoom": 4,
+    "center": [ 40, -80 ]
+  },
+  "adminURL": [ "https://services.arcgis.com/ptvDyBs1KkcwzQNJ/ArcGIS/rest/admin/services/WaterSewerPM/FeatureServer/0" ],
+
+  "featureURLs": [
+    "https://services.arcgis.com/ptvDyBs1KkcwzQNJ/arcgis/rest/services/WaterSewerPM/FeatureServer/0"
+
+  ],
+  "contractorsURL": [
+    "https://services.arcgis.com/ptvDyBs1KkcwzQNJ/ArcGIS/rest/services/WaterSewerPM/FeatureServer/1"
+  ],
+  "employeesURL": [
+    "https://services.arcgis.com/ptvDyBs1KkcwzQNJ/ArcGIS/rest/services/WaterSewerPM/FeatureServer/2"
+  ],
+  "identifyURL": [
+    "https://cotuuagsp/arcgis/rest/services/Public/COT_Inter_CityworksAllActive_D_SP/MapServer"
+  ],
+  "geomServiceURL": [ "https://interraster.leoncountyfl.gov/interraster/rest/services/Utilities/Geometry/GeometryServer" ]
+}
