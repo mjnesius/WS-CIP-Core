@@ -54,21 +54,21 @@ class SearchComponent extends React.Component {
     }
 
     searchChanged(e) {
-        console.log("search changed, e: ", e);
+        //console.log("search changed, e: ", e);
         this.setState({
             selectedItem: e,
         });
         if (this.props.type.includes('contractor')){
             const contractor = this.props.contractors.filter(item => item['Contractor'].toUpperCase().includes(e.toUpperCase()))
-            console.log("contractor obj: ", contractor);
+            //console.log("contractor obj: ", contractor);
             this.props.setSelected(contractor[0], 'contractors')
         } else if (this.props.type.includes('employees')){
             const employees = this.props.employees.filter(item => item['Name'].toUpperCase().includes(e.toUpperCase()))
-            console.log("employees obj: ", employees);
+            //console.log("employees obj: ", employees);
             this.props.setSelected(employees[0], 'employees')
         } else if (this.props.type.includes('projects')){
             const projects = this.props.projects.filter(item => item['Project_Name'] ? item['Project_Name'].toUpperCase().includes(e.toUpperCase()): '')
-            console.log("projects obj: ", projects);
+            //console.log("projects obj: ", projects);
             this.props.selectFeature(projects[0], 'projects')
         }
         
@@ -92,14 +92,14 @@ class SearchComponent extends React.Component {
     }
 
     onUserAction(inputValue, selectedItemVal) {
-        console.log("onUserAction, val: ", inputValue, "\tselectedItemval: ", selectedItemVal);
+        //console.log("onUserAction, val: ", inputValue, "\tselectedItemval: ", selectedItemVal);
         this.setState({
             inputValue: inputValue,
             selectedItem: selectedItemVal,
         });
     }
     setItems() {
-        console.log("set items");
+        //console.log("set items");
         if (this.props.type.includes('contractor')){
             return this.props.contractors.map(con => con['Contractor'])
         } else if (this.props.type.includes('employees')){
@@ -111,15 +111,15 @@ class SearchComponent extends React.Component {
     }
     setSelectedItem() {
         if (this.props.type.includes('contractor')){
-            console.log("setSelectedItem() , ",this.props.selectedContractor['Contractor'] );
+            //console.log("setSelectedItem() , ",this.props.selectedContractor['Contractor'] );
             return this.props.selectedContractor['Contractor'] ? this.props.selectedContractor['Contractor'] : '';
         } else if (this.props.type.includes('employees')){
             
-            console.log("setSelectedItem() , ",this.props.selectedEmployee['Name'] );
+            //console.log("setSelectedItem() , ",this.props.selectedEmployee['Name'] );
             return this.props.selectedEmployee['Name'] ? this.props.selectedEmployee['Name'] : '';
         } else if (this.props.type.includes('projects')){
             
-            console.log("setSelectedItem() , ",this.props.selectedProject['Project_Name'] );
+            //console.log("setSelectedItem() , ",this.props.selectedProject['Project_Name'] );
             return this.props.selectedProject['Project_Name'] ? this.props.selectedProject['Project_Name']: '';
         }
         

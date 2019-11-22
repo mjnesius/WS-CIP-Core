@@ -45,10 +45,10 @@ const FadingContainer = styled(Container)`
 `;
 
 const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 // position: absolute;
 //   right: 0;
@@ -57,13 +57,15 @@ const Wrapper = styled.div`
 //   display: flex;
 //   align-items: center;
 //   justify-content: flex-end;
+// position: absolute;
+//   top: 50%;
+//   left: 50%;
+//   transform: translate(-50%);
 const Title = styled.div `
   z-index: 20;
   width: 100%;
   padding: 2em;
-  text-align: right;
   color: white;
-  float: none;
   margin: 0 auto;
 `;
 // display: 'flex';
@@ -71,10 +73,7 @@ const Title = styled.div `
 const Label = styled.h1 `
   font-size: 3em;
   text-shadow: -2px 2px 8px rgba(0,0,0,0.25);
-  float: none;
   margin: 0 auto;
-  align-items:center;
-  align-content: center
 `;
 
 
@@ -82,12 +81,9 @@ const Label = styled.h1 `
 // display: 'flex';
 // justifyContent: 'center'
 const Logo = styled.img `
-  width: 15em;
+  width: 20em;
   height: 100%;
-  float: none;
   margin: 0 auto;
-  align-items:center;
-  align-content: flex-end
 `;
 
 // Animation durations in millisecondss -- Change these to adjust animation
@@ -119,17 +115,11 @@ class LoadScreen extends Component {
         <Container>
           <Wrapper>
             <Loader />
-          </Wrapper>
-          <Row></Row>
-          <Row className="show-grid">
-            <Col xs={7}>
-              <Title>
+            <Title>
               <Logo src={logo} ></Logo>
               <Label>Water-Sewer CIP</Label>
             </Title>
-            </Col>
-            
-          </Row>
+          </Wrapper>
         </Container>
       )
     } else if (this.props.isLoading && this.state.isAnimating) {

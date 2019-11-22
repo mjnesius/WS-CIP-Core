@@ -97,11 +97,11 @@ class Map extends Component {
     // refactor to set the filter using a Saga that calls a Map action creator
     if (this.props.fields.length > 1) {
       var lyrIndex = this.map.layers.findIndex(function(lyr){
-        console.log("lyr.id: ", lyr.id);
+        //console.log("lyr.id: ", lyr.id);
         return lyr.id === "projects";
       });
       var lyr = this.map.layers.getItemAt(lyrIndex);
-      console.log(lyr.definitionExpression, " vs ", this.props.defExp)
+      //console.log(lyr.definitionExpression, " vs ", this.props.defExp)
       if (!(lyr.definitionExpression === this.props.defExp)) {
         lyr.definitionExpression = this.props.defExp;
         var query = lyr.createQuery();

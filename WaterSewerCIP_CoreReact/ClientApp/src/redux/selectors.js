@@ -98,7 +98,7 @@ const parseEmployees = (state, _type ) => {
         })
     }
     else{
-        console.log("parseEmployees state.map.employees: ", state.map.employees)
+        //console.log("parseEmployees state.map.employees: ", state.map.employees)
         state.map.employees['features'].forEach((emp) => {
             //console.log(emp);
             _data.push(emp['attributes']);

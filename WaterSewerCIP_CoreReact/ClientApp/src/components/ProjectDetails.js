@@ -22,7 +22,7 @@ import validationRules from '../utils/validationRules';
 import DatePicker from 'calcite-react/DatePicker'
 import Form, {
     FormControl,
-    FormControlLabel, FormHelperText
+    FormControlLabel, //FormHelperText
 } from 'calcite-react/Form';
 
 //import {FormControl as BootstrapFormControl}  from 'react-bootstrap/FormControl';
@@ -88,39 +88,48 @@ class ProjectDetails extends React.Component {
         super();
         // TO-DO refactor to use Redux state
         this.validator = new formValidator(validationRules);
-        this.state = {/* 
-            Let_Date: null,
-            PreBid_Date: null,
-            BidOpening_Date: null,
-            PreCon_Date: null, */
+        this.state = {
             Let_DatePicker: false, 
             PreBid_DatePicker: false,
             BidOpening_DatePicker: false, 
             PreCon_DatePicker: false,
             Const_Start_Date_NTPPicker: false,
             Const_End_DatePicker: false,
-            validation: this.validator.valid()
+            validation: this.validator.valid(),
+            selectedFeature: {}
         }
         this._onDateChange = this._onDateChange.bind(this);
         this._onFocusChange = this._onFocusChange.bind(this);
         this._returnDomainDropdowns = this._returnDomainDropdowns.bind(this);
-
+        this._onBlur = this._onBlur.bind(this);
         
     };
+    _onBlur(){
+        console.log("on blur");
+        let propCopy = {...this.props.selectedFeature};
+        for (var key in this.state.selectedFeature){
+            if (key in propCopy ){
+               propCopy[key] = this.state.selectedFeature[key]; 
+            }
+            
+        }
+        new Promise(() => {
+            this.props.selectFeature(propCopy);
+        }).then(
+            this.setState({
+                selectedFeature: {}
+            })
+        ); 
+    }
     _onDateChange(date, id) {
         console.log("onDateChange date: ", date._d, "  date._d.valueOf(): ", date._d.valueOf(), " id: ", id);
         var _date = date._d.valueOf();
         let stateCopy ={...this.props.selectedFeature};
         stateCopy[id] = _date;
+        
         this.props.selectFeature(stateCopy);
-        // this.setState({
-        //     [id]: _date,
-        // });
+
         this._activateSaveButton();
-        // if (this.props.saveButton && this.state.validation) {
-        //     console.log("setSaveButton")
-        //     this.props.setSaveButton()
-        // }
     }
     _onFocusChange(e, id='') {
         console.log("date picker focus change: ", e, " id: ", id);
@@ -134,47 +143,56 @@ class ProjectDetails extends React.Component {
     _handleCheckboxEvent(val) {
         console.log("_handleCheckboxEvent val is: ",val, "\ttarget: ", val.target);
         console.log("_handleCheckboxEvent val.target.id is: ",val.target.id, "\tval.target.value: ", val.target.value);
-        let stateCopy ={...this.props.selectedFeature};
+        //let stateCopy ={...this.props.selectedFeature};
+        let stateCopy ={...this.state.selectedFeature};
         console.log("old: ", stateCopy[val.target.id] ,"  new ",val.target.id, " is: ", (stateCopy[val.target.id] > 0) ? 0 : 1);
         stateCopy[val.target.id] = (stateCopy[val.target.id] > 0) ? '0' : '1';
-        this.props.selectFeature(stateCopy);
+        //this.props.selectFeature(stateCopy);
         let validation = this.validator.validate(stateCopy);
         console.log("validation: ", validation, "\n\tthis.state.validation: ", this.state.validation);
         this.setState({
-            validation: validation
-            }, () => { this._activateSaveButton(); }
+            validation: validation,
+            selectedFeature: stateCopy
+            }, () => {this._onBlur(); }
         );
-        
+        this._activateSaveButton();
         return val.target.value;
       }
 
     _handleChangeEvent(val, target) {
+        //console.log("val: ", val)
+        //console.log("target: ", target)
         if( val.target ){
-            console.log("val.target: ", val.target);
-            let stateCopy ={...this.props.selectedFeature};
+            console.log("val.target.id: ", val.target.id);
+            let stateCopy ={...this.state.selectedFeature};
+            console.log("state copy: " + JSON.stringify(stateCopy));
             stateCopy[val.target.id] = (val.target.value === '' || val.target.value.length === 0) ? null : val.target.value;
-            this.props.selectFeature(stateCopy);
+            console.log("state copy 2: " + JSON.stringify(stateCopy));
             let validation = this.validator.validate(stateCopy);
-            console.log("validation: ", validation, "\n\tthis.state.validation: ", this.state.validation);
+            console.log("validation: " + validation, "\n\tthis.state.validation: " + this.state.validation);
+
             this.setState({
-                validation: validation
+                validation: validation,
+                selectedFeature: stateCopy
                 }, () => { this._activateSaveButton(); }
             );
-            return val;
+            return ;
         }
-        console.log("val.target: ", val.target);
-        let stateCopy ={...this.props.selectedFeature};
+        console.log("val: ", val);
+        let stateCopy ={...this.state.selectedFeature};
         stateCopy[target] = (val === '' || val === 0) ? null : val;
-        this.props.selectFeature(stateCopy);
+
         let validation = this.validator.validate(stateCopy);
         console.log("validation: ", validation, "\n\tthis.state.validation: ", this.state.validation);
-        this.setState({
-            validation: validation
-            }, () => { this._activateSaveButton(); }
-        );
-        //console.log( "this.state.validation: ", this.state.validation);
         
-        return val;
+        this.setState({
+            validation: validation,
+            selectedFeature: stateCopy
+            }, () => { this._onBlur() }
+        )
+        this._activateSaveButton();
+        
+        return ;
       }
 
     _activateSaveButton = (event) => {
@@ -208,22 +226,13 @@ class ProjectDetails extends React.Component {
                 var _key = Object.keys(codedValObj)[0];
                 return codedValObj[_key]
             } );
-            console.log("sortedObjs: ", sortedObjs);
+            //console.log("sortedObjs: ", sortedObjs);
             sortedObjs.forEach(function(_dom){
                 var _key = Object.keys(_dom)[0];
                 items.push( <MenuItem key ={_dom[_key]} value={_dom[_key]} >{ _dom[_key]}</MenuItem>)
             })
-            console.log("items: ", items);
+            //console.log("items: ", items);
 
-            // console.log("domainName: ", domainName, " \ndomainObj[domainName]: ", domainObj[domainName]);
-            // if (!(domainObj === undefined || domainObj === null)) {
-            //     Object.keys(domainObj[domainName]).forEach(function (codedValObj) {
-            //         var _key = Object.keys(domainObj[domainName][codedValObj])[0];
-            //         var _val = domainObj[domainName][codedValObj][_key];
-            //         //console.log("codedValObj: ", codedValObj, "  _key: ", _key, "  _val: ", _val);
-            //         items.push(<MenuItem key={_key} value={_key} >{_val}</MenuItem>);
-            //     })
-            // }
             return items;
         }
        
@@ -253,10 +262,7 @@ class ProjectDetails extends React.Component {
             });   
         }
         else if (_type.toLowerCase().indexOf('contract') > -1){
-            sortedObjs = _.sortBy( this.props.contractors, 'Contractor' );
-            // this.props.contractors.forEach(function(_man){
-            //     items.push( <MenuItem key ={_man.OBJECTID} value={_man.Contractor} >{ _man.Contractor}</MenuItem>)
-            // });  
+            sortedObjs = _.sortBy( this.props.contractors, 'Contractor' ); 
             sortedObjs.forEach(function(_contract){
                 items.push( <MenuItem key ={_contract.OBJECTID} value={_contract.Contractor} >{ _contract.Contractor}</MenuItem>)
             });  
@@ -312,7 +318,7 @@ class ProjectDetails extends React.Component {
                 //console.log("_man: ", _man);
                 return _man[_matchFld] === _matchVal;
             });
-            console.log("related match: ", match);
+            //console.log("related match: ", match);
             _match = match[0] ? match[0] : {};
             val = _match[fld] ? _match[fld] : ''
         }
@@ -327,7 +333,7 @@ class ProjectDetails extends React.Component {
 
     render() {
         let validation = this.validator.validate(this.props.selectedFeature);
-        console.log("render's validation: ", validation) 
+        //console.log("render's validation: ", validation) 
         return (
             <div className="container-fluid" style={{ padding: "0px", backgroundColor: "transparent" }}>
                 <Row >
@@ -352,19 +358,27 @@ class ProjectDetails extends React.Component {
                                             <StyledProjectLabel>Project Name</StyledProjectLabel>
                                             <TextField fullWidth id='Project_Name' type="textarea"
                                                 style={{ resize: 'both', maxHeight: '100%', height: '65px' }}
-                                                value={!(Object.keys(this.props.selectedFeature).length > 0) ?
-                                                    " Search and Select a Project.\n (Use the Map to Create New Projects)" :
-                                                    this._getAttribute('Project_Name')}
-                                                onChange={this._handleChangeEvent.bind(this)}
+                                                value={!(Object.keys(this.state.selectedFeature).length > 0) ?
+                                                    (!(Object.keys(this.props.selectedFeature).length > 0) ?
+                                                        " Search and Select a Project.\n (Use the Map to Create New Projects)" :
+                                                    this._getAttribute('Project_Name')
+                                                    ) :
+                                                    this.state.selectedFeature['Project_Name']
+                                                }
+                                                onBlur={this._onBlur.bind(this)}
+                                                onChange={(e) => this._handleChangeEvent(e, 'Project_Name')}  
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)} />
                                         </StyledFormControl>
 
                                         <StyledFormControl horizontal error={validation.Status.isInvalid}>
                                             <StyledProjectLabel>Status</StyledProjectLabel>
-                                            <StyledSelect fullWidth id='Status' selectedValue={this._getAttribute('Status')}
+                                            <StyledSelect fullWidth id='Status' 
+                                                selectedValue={this.state.selectedFeature['Status'] ? 
+                                                    this.state.selectedFeature['Status'] : this._getAttribute('Status')}
+                                                onBlur={this._onBlur.bind(this)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Status')}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
-                                            /* onChange={this._handleChangeEvent.bind(this)} */ >
+                                                 >
                                                 {this._returnDomainDropdowns('Status')}
                                             </StyledSelect>
                                         </StyledFormControl>
@@ -372,7 +386,10 @@ class ProjectDetails extends React.Component {
                                         <StyledFormControl horizontal error={validation.Project_Manager.isInvalid}>
                                             <StyledProjectLabel>Project Manager</StyledProjectLabel>
                                             <StyledSelect className="d-flex align-items-center" fullWidth
-                                                id='Project_Manager' selectedValue={this._getAttribute('Project_Manager')}
+                                                id='Project_Manager'
+                                                selectedValue={this.state.selectedFeature['Project_Manager'] ? 
+                                                    this.state.selectedFeature['Project_Manager'] : this._getAttribute('Project_Manager')}
+                                                //selectedValue={this._getAttribute('Project_Manager')}
                                                 placeholder={this._getAttribute('Project_Manager') ? this._getAttribute('Project_Manager') : "Select..."}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Manager')}
@@ -386,7 +403,10 @@ class ProjectDetails extends React.Component {
                                         <StyledFormControl horizontal error={validation.Project_Type.isInvalid}>
                                             <StyledProjectLabel>Project Type</StyledProjectLabel>
                                             <StyledSelect className="d-flex align-items-center" fullWidth
-                                                id='Project_Type' selectedValue={this._getAttribute('Project_Type')}
+                                                id='Project_Type'
+                                                selectedValue={this.state.selectedFeature['Project_Type'] ? 
+                                                    this.state.selectedFeature['Project_Type'] : this._getAttribute('Project_Type')} 
+                                                //selectedValue={this._getAttribute('Project_Type')}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Type')}
                                             >
@@ -396,7 +416,10 @@ class ProjectDetails extends React.Component {
                                         <StyledFormControl horizontal>
                                             <StyledProjectLabel>Project Originator</StyledProjectLabel>
                                             <StyledSelect className="d-flex align-items-center" fullWidth
-                                                id='Project_Originator' selectedValue={this._getAttribute('Project_Originator')}
+                                                id='Project_Originator' 
+                                                selectedValue={this.state.selectedFeature['Project_Originator'] ? 
+                                                    this.state.selectedFeature['Project_Originator'] : this._getAttribute('Project_Originator')} 
+                                                //selectedValue={this._getAttribute('Project_Originator')}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Originator')}
                                             >
@@ -407,7 +430,12 @@ class ProjectDetails extends React.Component {
                                             <StyledProjectLabel>Project Location</StyledProjectLabel>
                                             <TextField className="d-flex align-items-center" fullWidth
                                                 id='Project_Location' 
-                                                value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('Project_Location')}
+                                                value={!(Object.keys(this.state.selectedFeature).length > 0) ?
+                                                    this._getAttribute('Project_Location') :
+                                                    this.state.selectedFeature['Project_Location']
+                                                }
+                                                onBlur={this._onBlur.bind(this)}
+                                                //value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('Project_Location')}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Location')} 
                                             />
@@ -416,7 +444,12 @@ class ProjectDetails extends React.Component {
                                             <StyledProjectLabel>WRE Project #</StyledProjectLabel>
                                             <TextField className="d-flex align-items-center" fullWidth
                                                 id='WRE_ProjectNo' 
-                                                value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('WRE_ProjectNo')}
+                                                value={!(Object.keys(this.state.selectedFeature).length > 0) ?
+                                                    this._getAttribute('WRE_ProjectNo') :
+                                                    this.state.selectedFeature['WRE_ProjectNo']
+                                                }
+                                                onBlur={this._onBlur.bind(this)}
+                                                //value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('WRE_ProjectNo')}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'WRE_ProjectNo')} 
                                             />
@@ -424,7 +457,10 @@ class ProjectDetails extends React.Component {
                                         <StyledFormControl horizontal>
                                             <StyledProjectLabel>Contact</StyledProjectLabel>
                                             <StyledSelect fullWidth className="d-flex align-items-center"
-                                                id='Contact' selectedValue={this._getAttribute('Contact')}
+                                                id='Contact' 
+                                                selectedValue={this.state.selectedFeature['Contact'] ? 
+                                                    this.state.selectedFeature['Contact'] : this._getAttribute('Contact')}
+                                                //selectedValue={this._getAttribute('Contact')}
                                                 placeholder={this._getAttribute('Contact') ? this._getAttribute('Contact') : "Select..."}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Contact')}
@@ -456,8 +492,13 @@ class ProjectDetails extends React.Component {
                                             <StyledProjectLabel>Project Notes</StyledProjectLabel>
                                             <TextField fullWidth id='Notes' type="textarea"
                                                 style={{ resize: 'both', maxHeight: '100%', height: '95px' }}
-                                                value={ this._getAttribute('Notes')}
-                                                onChange={this._handleChangeEvent.bind(this)}
+                                                placeholder={ this._getAttribute('Notes')}
+                                                value={!(Object.keys(this.state.selectedFeature).length > 0) ?
+                                                    this._getAttribute('Notes') :
+                                                    this.state.selectedFeature['Notes']
+                                                }
+                                                onBlur={this._onBlur.bind(this)}
+                                                onChange={(e) => this._handleChangeEvent(e, 'Project_Name')} 
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)} 
                                             />
                                         </StyledFormControl>
@@ -480,7 +521,10 @@ class ProjectDetails extends React.Component {
                                                 <StyledFormControl horizontal>
                                                     <StyledProjectLabel>Contractor</StyledProjectLabel>
                                                     <StyledSelect fullWidth className="d-flex align-items-center"
-                                                        id='Contractor' selectedValue={this._getAttribute('Contractor')}
+                                                        id='Contractor' 
+                                                        selectedValue={this.state.selectedFeature['Contractor'] ? 
+                                                            this.state.selectedFeature['Contractor'] : this._getAttribute('Contractor')}
+                                                        //selectedValue={this._getAttribute('Contractor')}
                                                         placeholder={this._getAttribute('Contractor') ? this._getAttribute('Contractor') : "Select..."}
                                                         disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Contractor')}
@@ -509,7 +553,10 @@ class ProjectDetails extends React.Component {
                                                 <StyledFormControl horizontal>
                                                     <StyledProjectLabel>Contractor On Site</StyledProjectLabel>
                                                     <StyledSelect fullWidth className="d-flex align-items-center"
-                                                        id='Company_On_Site' selectedValue={this._getAttribute('Company_On_Site')}
+                                                        id='Company_On_Site' 
+                                                        selectedValue={this.state.selectedFeature['Company_On_Site'] ? 
+                                                            this.state.selectedFeature['Company_On_Site'] : this._getAttribute('Company_On_Site')}
+                                                        //selectedValue={this._getAttribute('Company_On_Site')}
                                                         placeholder={this._getAttribute('Company_On_Site') ? this._getAttribute('Company_On_Site') : "Select..."}
                                                         disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Company_On_Site')}
@@ -523,7 +570,10 @@ class ProjectDetails extends React.Component {
                                                 <StyledFormControl horizontal>
                                                     <StyledProjectLabel>Inspector</StyledProjectLabel>
                                                     <StyledSelect fullWidth className="d-flex align-items-center"
-                                                        id='Inspector' selectedValue={this._getAttribute('Inspector')}
+                                                        id='Inspector' 
+                                                        selectedValue={this.state.selectedFeature['Inspector'] ? 
+                                                            this.state.selectedFeature['Inspector'] : this._getAttribute('Inspector')}
+                                                        //selectedValue={this._getAttribute('Inspector')}
                                                         placeholder={this._getAttribute('Inspector') ? this._getAttribute('Inspector') : "Select..."}
                                                         disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Inspector')}
@@ -688,7 +738,7 @@ class ProjectDetails extends React.Component {
                                             <Col sm="6" className="d-flex justify-content-center m-0 p-0">
                                                 <Checkbox id='WaterWork' labelStyle={{ fontWeight: 'bold', fontSize: '16px' }}
                                                     value={this._getAttribute('WaterWork').toString()}
-                                                    checked={(this._getAttribute('WaterWork') === '1') ? true : false}
+                                                    checked={(this._getAttribute('WaterWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     fullWidth
                                                     disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
@@ -698,7 +748,8 @@ class ProjectDetails extends React.Component {
                                             <Col sm="6" className="d-flex justify-content-center">
                                                 <Checkbox id='SewerWork' labelStyle={{ fontWeight: 'bold' }}
                                                     value={this._getAttribute('SewerWork').toString()}
-                                                    checked={(this._getAttribute('SewerWork') === '1') ? true : false}
+                                                    checked={(this._getAttribute('SewerWork') === 1 || 
+                                                        this.state.selectedFeature['SewerWork'] === 1) ? true : (false)}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     fullWidth
                                                     disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
@@ -710,7 +761,7 @@ class ProjectDetails extends React.Component {
                                             <Col sm="4" className="d-flex justify-content-center m-0 p-0">
                                                 <Checkbox id='StormWork' labelStyle={{ fontWeight: 'bold' }}
                                                     value={this._getAttribute('StormWork').toString()}
-                                                    checked={(this._getAttribute('StormWork') === '1') ? true : false}
+                                                    checked={(this._getAttribute('StormWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                     fullWidth
@@ -720,7 +771,7 @@ class ProjectDetails extends React.Component {
                                             <Col sm="4" className="d-flex justify-content-center m-0 p-0">
                                                 <Checkbox id='RoadWork' labelStyle={{ fontWeight: 'bold' }}
                                                     value={this._getAttribute('RoadWork').toString()}
-                                                    checked={(this._getAttribute('RoadWork') === '1') ? true : false}
+                                                    checked={(this._getAttribute('RoadWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                     fullWidth
@@ -730,7 +781,7 @@ class ProjectDetails extends React.Component {
                                             <Col sm="4" className="d-flex justify-content-center m-0 p-0">
                                                 <Checkbox id='GasWork' labelStyle={{ fontWeight: 'bold' }}
                                                     value={this._getAttribute('GasWork').toString()}
-                                                    checked={(this._getAttribute('GasWork') === '1') ? true : false}
+                                                    checked={(this._getAttribute('GasWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
                                                     fullWidth
@@ -746,7 +797,12 @@ class ProjectDetails extends React.Component {
                                             </CardTitle>
                                             <TextField fullWidth id='Construction_Notes' type="textarea"
                                                 style={{ resize: 'both', maxHeight: '100%', height: '85px' }}
-                                                value={ this._getAttribute('Construction_Notes')}
+                                                value={!(Object.keys(this.state.selectedFeature).length > 0) ?
+                                                    this._getAttribute('Construction_Notes') :
+                                                    this.state.selectedFeature['Construction_Notes']
+                                                }
+                                                onBlur={this._onBlur.bind(this)}
+                                                //value={ this._getAttribute('Construction_Notes')}
                                                 onChange={this._handleChangeEvent.bind(this)}
                                                 disabled={!(Object.keys(this.props.selectedFeature).length > 0)} 
                                             />
