@@ -7,6 +7,7 @@ export const types = {
     UPDATE_FAIL: "UPDATE_FAIL",
     SAVE_BUTTON: "SAVE_BUTTON",
     SET_SELECTED: "SET_SELECTED",
+    BEGIN_EDIT: "BEGIN_EDIT"
   };
   
   // REDUCERS //
@@ -15,7 +16,8 @@ export const types = {
     updateSuccess: Boolean,
     saveButton: true,
     selectedContractor: {},
-    selectedEmployee: {}
+    selectedEmployee: {},
+    editButton: true
   };
 
 export default (state = initialState, action) => {
@@ -78,7 +80,19 @@ export default (state = initialState, action) => {
         }
       }
     
-      
+    case types.BEGIN_EDIT:
+        if(action.payload.deactivate){
+          console.log("set editButton to disabled ");
+          return {
+            ...state,
+            editButton: true
+          } 
+        }
+      return {
+        ...state,
+        editButton: !state.editButton
+      }
+
     default:
       return state;
   }
@@ -117,6 +131,12 @@ export const actions = {
     payload: {
       item: _item,
       type: _type
+    }
+  }),
+  setEditButton: deactivate => ({
+    type: types.BEGIN_EDIT,
+    payload:{
+      deactivate: deactivate
     }
   })
 };
