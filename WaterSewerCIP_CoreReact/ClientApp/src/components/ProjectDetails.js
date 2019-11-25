@@ -831,7 +831,7 @@ const mapStateToProps = state => ({
     employees: parseEmployeesData(state, 'all'),
     contractors: parseContractorData(state),
     saveButton: state.attributes.saveButton,
-    editButton: state.attributes.editButton,
+    editButton: state.attributes.editButton
 });
 
 const mapDispatchToProps = dispatch => {
