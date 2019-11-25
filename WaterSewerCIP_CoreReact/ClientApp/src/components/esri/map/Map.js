@@ -345,9 +345,6 @@ class Map extends Component {
   }
 
    showPopup = (response) => {
-     console.log("showpopup")
-    // features: response,
-    //     location: event.mapPoint
     console.log("showPopup(response): ", response);
 
     if(this.view.popup.features.length > 0 && response.length > 0){
@@ -366,7 +363,9 @@ class Map extends Component {
         defaultPopupTemplateEnabled: true,
         dockEnabled : true,
         highlightEnabled: true
-      })
+      });
+      this.view.popup.viewModel.features = response;
+      this.view.popup.viewModel.highlightEnabled = true;
     } 
     document.getElementById("map-view-container").style.cursor = "default";
   }
@@ -447,9 +446,7 @@ class Map extends Component {
         identifyTask
           .execute(idParams)
           .then(response => {
-
             var results = response.results;
-
             console.log("results.length: " + results.length + ", results: " + results);
 
             return results.map(function (result) {
@@ -457,6 +454,17 @@ class Map extends Component {
               var layerName = result.layerName;
               console.log("feature.attributes: ", feature.attributes);
               feature.attributes.layerName = layerName;
+              console.log("feature.symbol: ", feature.symbol);
+              // var symbol= {
+              //   type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              //   color: ,
+              //   size: 8,
+              //   outline: { // autocasts as new SimpleLineSymbol()
+              //     width: 0.5,
+              //     color: "darkblue"
+              //   }
+              // }
+              feature.symbol.color = [255, 255, 0, 1];
               var fieldInfos = [];
               for (var k in feature.attributes) {
                 fieldInfos.push({
@@ -471,8 +479,7 @@ class Map extends Component {
                   type: "fields",
                   fieldInfos: fieldInfos
                 }],
-                outFields: ["*"],
-                highlightEnabled: true
+                outFields: ["*"]
               }
 
               return feature;
@@ -485,7 +492,6 @@ class Map extends Component {
     
     console.log("setupEventHandlers()\tprops\t", this.props);
     view.on("click", this.executeIdentifyTask);
-
     view.popup.on("trigger-action",  (event) => {
       console.log(event);
       console.log(event.action);
