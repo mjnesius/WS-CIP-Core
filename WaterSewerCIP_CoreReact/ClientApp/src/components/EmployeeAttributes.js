@@ -213,6 +213,7 @@ class EmployeeAttributes extends React.Component {
                             onChange={this._handleChangeEvent.bind(this)}
                             onBlur={this._onBlur.bind(this)} fullWidth type="textarea"
                             style={{ resize: 'both', maxHeight: '100%', height: '36px' }}
+                            disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}
                           >
                           </TextField>
                         </FormControl>
@@ -225,7 +226,8 @@ class EmployeeAttributes extends React.Component {
                             }
                             onChange={this._handleChangeEvent.bind(this)}
                             //value={this._getAttribute('Employee_ID')}
-                            onBlur={this._onBlur.bind(this)} fullWidth>
+                            onBlur={this._onBlur.bind(this)} fullWidth
+                            disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}>
                           </TextField>
                         </FormControl>
                       </Col>
@@ -239,7 +241,8 @@ class EmployeeAttributes extends React.Component {
                             }
                             onChange={this._handleChangeEvent.bind(this)}
                             //value={this._getAttribute('OfficeNumber')}
-                            onBlur={this._onBlur.bind(this)} fullWidth>
+                            onBlur={this._onBlur.bind(this)} fullWidth
+                            disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}>
                           </TextField>
                         </FormControl>
                         <FormControl >
@@ -251,7 +254,8 @@ class EmployeeAttributes extends React.Component {
                             }
                             onChange={this._handleChangeEvent.bind(this)}
                             //value={this._getAttribute('CellNumber')}
-                            onBlur={this._onBlur.bind(this)} fullWidth>
+                            onBlur={this._onBlur.bind(this)} fullWidth
+                            disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}>
                           </TextField>
                         </FormControl>
                         <FormControl >
@@ -263,7 +267,8 @@ class EmployeeAttributes extends React.Component {
                             }
                             onChange={this._handleChangeEvent.bind(this)}
                             //value={this._getAttribute('Email')}
-                            onBlur={this._onBlur.bind(this)} fullWidth>
+                            onBlur={this._onBlur.bind(this)} fullWidth
+                            disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}>
                           </TextField>
                         </FormControl>
                       </Col>
@@ -282,7 +287,7 @@ class EmployeeAttributes extends React.Component {
                         checked={(this._getAttribute('IsWSProjMgr') === '1') ? true : false}
                         onChange={this._handleCheckboxEvent.bind(this)}
                         fullWidth
-                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0)}
+                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}
                       > WS Project Manager
                       </Checkbox>
                       <Checkbox id='IsWSPMInspector'
@@ -291,7 +296,7 @@ class EmployeeAttributes extends React.Component {
                         checked={(this._getAttribute('IsWSPMInspector') === '1') ? true : false}
                         onChange={this._handleCheckboxEvent.bind(this)}
                         fullWidth
-                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0)}
+                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}
                       > WS Inspector
                       </Checkbox>
                       <Checkbox id='IsWSPMContact'
@@ -300,7 +305,7 @@ class EmployeeAttributes extends React.Component {
                         checked={(this._getAttribute('IsWSPMContact') === '1') ? true : false}
                         onChange={this._handleCheckboxEvent.bind(this)}
                         fullWidth
-                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0)}
+                        disabled={!(Object.keys(this.props.selectedEmployee).length > 0 && !this.props.editButton)}
                       > WS Project Contact
                       </Checkbox>
                     </Row>
@@ -366,7 +371,8 @@ const mapStateToProps = state => ({
     employees: parseEmployeesData(state),
     isVisible: state.map.attributesComponent,
     domains: parseDomainValues(state),
-    saveButton: state.attributes.saveButton
+    saveButton: state.attributes.saveButton,
+    editButton: state.attributes.editButton
   });
     
     const mapDispatchToProps = dispatch => {

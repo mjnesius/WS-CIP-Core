@@ -131,6 +131,7 @@ class ContractorAttributes extends Component{
                                                     value={this._getAttribute('Contractor')}
                                                     onChange={this._handleChangeEvent.bind(this)} fullWidth type="textarea"
                                                     style={{ resize: 'both', maxHeight: '100%', height: '36px' }}
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}
                                                 >
                                                 </TextField>
                                             </FormControl>
@@ -139,7 +140,8 @@ class ContractorAttributes extends Component{
                                             <FormControl >
                                                 <FormControlLabel style={{ minWidth: '160px', textAlign: 'left', paddingLeft: '5' }}>Contractor ID</FormControlLabel>
                                                 <TextField id="Contractor_ID" value={this._getAttribute('Contractor_ID')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                         </Col>
@@ -149,7 +151,8 @@ class ContractorAttributes extends Component{
                                             <FormControl >
                                                 <FormControlLabel style={{ width: '120px', textAlign: 'left', paddingLeft: '3' }} >Main Number</FormControlLabel>
                                                 <TextField id="Main_Number" value={this._getAttribute('Main_Number')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                         </Col>
@@ -157,31 +160,36 @@ class ContractorAttributes extends Component{
                                             <FormControl >
                                                 <FormControlLabel style={{ width: '160px', textAlign: 'left', paddingLeft: '3' }}>Address</FormControlLabel>
                                                 <TextField id="Address" value={this._getAttribute('Address')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ width: '80px', textAlign: 'left', paddingLeft: '1' }}>Suite</FormControlLabel>
                                                 <TextField id="Suite" value={this._getAttribute('Suite')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ width: '80px', textAlign: 'left', paddingLeft: '1' }}>City</FormControlLabel>
                                                 <TextField id="City" value={this._getAttribute('City')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ width: '80px', textAlign: 'left', paddingLeft: '1' }}>State</FormControlLabel>
                                                 <TextField id="State" value={this._getAttribute('State')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ wdth: '80px', textAlign: 'left', paddingLeft: '1' }}>Zip</FormControlLabel>
                                                 <TextField id="Zip" value={this._getAttribute('Zip')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                         </Col>
@@ -198,19 +206,22 @@ class ContractorAttributes extends Component{
                                             <FormControl style={{ width: '70px'}}>
                                                 <FormControlLabel style={{ minWidth: '100px', textAlign: 'left', paddingLeft: '1' }}>Honorific</FormControlLabel>
                                                 <TextField id="Contact_NamePrefix" value={this._getAttribute('Contact_NamePrefix')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl required>
                                                 <FormControlLabel style={{ minWidth: '120px', textAlign: 'left', paddingLeft: '1' }}>First Name</FormControlLabel>
                                                 <TextField id="Contact_FirstName" value={this._getAttribute('Contact_FirstName')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl required>
                                                 <FormControlLabel style={{ minWidth: '120px', textAlign: 'left', paddingLeft: '1' }}>Last Name</FormControlLabel>
                                                 <TextField id="Contact_LastName" value={this._getAttribute('Contact_LastName')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                         </Col>
@@ -218,36 +229,41 @@ class ContractorAttributes extends Component{
                                             <FormControl >
                                                 <FormControlLabel style={{ minWidth: '120px', textAlign: 'left', paddingLeft: '1' }}>Email</FormControlLabel>
                                                 <TextField label="Email:" id="Contact_Email" value={this._getAttribute('Contact_Email')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ minWidth: '110px', textAlign: 'left', paddingLeft: '1' }}>Office Number</FormControlLabel>
                                                 <TextField label="Email:" id="Contact_Number" value={this._getAttribute('Contact_Number')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                             <FormControl >
                                                 <FormControlLabel style={{ minWidth: '110px', textAlign: 'left', paddingLeft: '1' }}>Extension</FormControlLabel>
                                                 <TextField label="Email:" id="Contact_Extension" value={this._getAttribute('Contact_Extension')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                              <FormControl >
                                                 <FormControlLabel style={{ minWidth: '110px', textAlign: 'left', paddingLeft: '1' }}>Cell</FormControlLabel>
                                                 <TextField label="Email:" id="Contact_Cell" value={this._getAttribute('Contact_Cell')}
-                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth>
+                                                    onChange={this._handleChangeEvent.bind(this)} fullWidth
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}>
                                                 </TextField>
                                             </FormControl>
                                         </Col>
                                     </Row>
                                     <Row >
-                                        <Col sm="4" md="2" className="d-flex align-items-left" >
+                                        <Col sm="6" md="4" className="d-flex align-items-left" >
                                             <FormControl fullWidth>
                                                 <FormControlLabel style={{ minWidth: '160px', textAlign: 'left', paddingLeft: '5' }}>Comments</FormControlLabel>
                                                 <TextField id="Comments" value={this._getAttribute('Comments')}
                                                     onChange={this._handleChangeEvent.bind(this)} fullWidth type="textarea"
                                                     style={{ resize: 'both', maxHeight: '100%', height: '36px' }}
+                                                    disabled={!(Object.keys(this.props.selectedContractor).length > 0 && !this.props.editButton)}
                                                 >
                                                 </TextField>
                                             </FormControl>
@@ -317,6 +333,7 @@ const mapStateToProps = state => ({
     //domains: parseDomainValues(state),
     //optionsManagers: state.map.managers,
     fields: getColumnsFromFields(state, "contractors"),
+    editButton: state.attributes.editButton
 });
 
 const mapDispatchToProps = dispatch => {

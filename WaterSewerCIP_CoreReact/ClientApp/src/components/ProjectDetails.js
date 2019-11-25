@@ -367,7 +367,7 @@ class ProjectDetails extends React.Component {
                                                 }
                                                 onBlur={this._onBlur.bind(this)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Name')}  
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)} />
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)} />
                                         </StyledFormControl>
 
                                         <StyledFormControl horizontal error={validation.Status.isInvalid}>
@@ -377,7 +377,7 @@ class ProjectDetails extends React.Component {
                                                     this.state.selectedFeature['Status'] : this._getAttribute('Status')}
                                                 onBlur={this._onBlur.bind(this)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Status')}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                  >
                                                 {this._returnDomainDropdowns('Status')}
                                             </StyledSelect>
@@ -391,7 +391,7 @@ class ProjectDetails extends React.Component {
                                                     this.state.selectedFeature['Project_Manager'] : this._getAttribute('Project_Manager')}
                                                 //selectedValue={this._getAttribute('Project_Manager')}
                                                 placeholder={this._getAttribute('Project_Manager') ? this._getAttribute('Project_Manager') : "Select..."}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Manager')}
                                                 onDoubleClick={ (e) => {
                                                     this._navToRelatedItem('employee', this._getAttribute('Project_Manager') )
@@ -407,7 +407,7 @@ class ProjectDetails extends React.Component {
                                                 selectedValue={this.state.selectedFeature['Project_Type'] ? 
                                                     this.state.selectedFeature['Project_Type'] : this._getAttribute('Project_Type')} 
                                                 //selectedValue={this._getAttribute('Project_Type')}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Type')}
                                             >
                                                 {this._returnDomainDropdowns('Project_Type')}
@@ -420,7 +420,7 @@ class ProjectDetails extends React.Component {
                                                 selectedValue={this.state.selectedFeature['Project_Originator'] ? 
                                                     this.state.selectedFeature['Project_Originator'] : this._getAttribute('Project_Originator')} 
                                                 //selectedValue={this._getAttribute('Project_Originator')}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Originator')}
                                             >
                                                 {this._returnDomainDropdowns('Project_Originator')}
@@ -436,7 +436,7 @@ class ProjectDetails extends React.Component {
                                                 }
                                                 onBlur={this._onBlur.bind(this)}
                                                 //value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('Project_Location')}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Location')} 
                                             />
                                         </StyledFormControl>
@@ -450,7 +450,7 @@ class ProjectDetails extends React.Component {
                                                 }
                                                 onBlur={this._onBlur.bind(this)}
                                                 //value={!(Object.keys(this.props.selectedFeature).length > 0) ? " " : this._getAttribute('WRE_ProjectNo')}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'WRE_ProjectNo')} 
                                             />
                                         </StyledFormControl>
@@ -462,7 +462,7 @@ class ProjectDetails extends React.Component {
                                                     this.state.selectedFeature['Contact'] : this._getAttribute('Contact')}
                                                 //selectedValue={this._getAttribute('Contact')}
                                                 placeholder={this._getAttribute('Contact') ? this._getAttribute('Contact') : "Select..."}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Contact')}
                                                 onDoubleClick={ (e) => {
                                                     console.log("double click event: ", e)
@@ -499,7 +499,7 @@ class ProjectDetails extends React.Component {
                                                 }
                                                 onBlur={this._onBlur.bind(this)}
                                                 onChange={(e) => this._handleChangeEvent(e, 'Project_Name')} 
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)} 
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)} 
                                             />
                                         </StyledFormControl>
                                     </Col>
@@ -526,7 +526,7 @@ class ProjectDetails extends React.Component {
                                                             this.state.selectedFeature['Contractor'] : this._getAttribute('Contractor')}
                                                         //selectedValue={this._getAttribute('Contractor')}
                                                         placeholder={this._getAttribute('Contractor') ? this._getAttribute('Contractor') : "Select..."}
-                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Contractor')}
                                                         onDoubleClick={ (e) => {
                                                             console.log('double click event: ', e)
@@ -558,7 +558,7 @@ class ProjectDetails extends React.Component {
                                                             this.state.selectedFeature['Company_On_Site'] : this._getAttribute('Company_On_Site')}
                                                         //selectedValue={this._getAttribute('Company_On_Site')}
                                                         placeholder={this._getAttribute('Company_On_Site') ? this._getAttribute('Company_On_Site') : "Select..."}
-                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Company_On_Site')}
                                                         onDoubleClick={ (e) => {
                                                             this._navToRelatedItem('contractor', this._getAttribute('Company_On_Site') )
@@ -575,7 +575,7 @@ class ProjectDetails extends React.Component {
                                                             this.state.selectedFeature['Inspector'] : this._getAttribute('Inspector')}
                                                         //selectedValue={this._getAttribute('Inspector')}
                                                         placeholder={this._getAttribute('Inspector') ? this._getAttribute('Inspector') : "Select..."}
-                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                        disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                         onChange={(e) => this._handleChangeEvent(e, 'Inspector')}
                                                         onDoubleClick={ (e) => {
                                                             this._navToRelatedItem('employee', this._getAttribute('Inspector') )
@@ -608,7 +608,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal className='d-flex align-items-center'>
                                                 <StyledProjectLabel>Let Dates</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="Let_DatePicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('Let_Date') ? new moment(new Date(this._getAttribute('Let_Date'))) : undefined}
@@ -625,7 +625,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal className='d-flex align-items-center'>
                                                 <StyledProjectLabel>Pre Bid Date</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="PreBid_DatePicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('PreBid_Date') ? new moment(new Date(this._getAttribute('PreBid_Date'))) : undefined}
@@ -644,7 +644,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal>
                                                 <StyledProjectLabel>Bid Opening Date</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="BidOpening_DatePicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('BidOpening_Date') ? new moment(new Date(this._getAttribute('BidOpening_Date'))) : undefined}
@@ -661,7 +661,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal>
                                                 <StyledProjectLabel>Pre Con Date</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="PreCon_DatePicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('PreCon_Date') ? new moment(new Date(this._getAttribute('PreCon_Date'))) : undefined}
@@ -680,7 +680,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal>
                                                 <StyledProjectLabel>Constr. NTP</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="Const_Start_Date_NTPPicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('Const_Start_Date_NTP') ? new moment(new Date(this._getAttribute('Const_Start_Date_NTP'))) : undefined}
@@ -697,7 +697,7 @@ class ProjectDetails extends React.Component {
                                             <StyledFormControl horizontal>
                                                 <StyledProjectLabel>Constr. End Date</StyledProjectLabel>
                                                 <StyledDatePicker
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     id="Const_End_DatePicker"
                                                     yearSelectDates={{ startYear: new moment().subtract('year', 10).year(), endYear: new moment().add('year', 10).year() }}
                                                     date={this._getAttribute('Const_End_Date') ? new moment(new Date(this._getAttribute('Const_End_Date'))) : undefined}
@@ -741,7 +741,7 @@ class ProjectDetails extends React.Component {
                                                     checked={(this._getAttribute('WaterWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     fullWidth
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 > Water Work
                                             </Checkbox>
                                             </Col>
@@ -752,7 +752,7 @@ class ProjectDetails extends React.Component {
                                                         this.state.selectedFeature['SewerWork'] === 1) ? true : (false)}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
                                                     fullWidth
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                 > Sewer Work
                                             </Checkbox>
                                             </Col>
@@ -763,7 +763,7 @@ class ProjectDetails extends React.Component {
                                                     value={this._getAttribute('StormWork').toString()}
                                                     checked={(this._getAttribute('StormWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     fullWidth
                                                 > Storm Work
                                             </Checkbox>
@@ -773,7 +773,7 @@ class ProjectDetails extends React.Component {
                                                     value={this._getAttribute('RoadWork').toString()}
                                                     checked={(this._getAttribute('RoadWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     fullWidth
                                                 > Road Work
                                             </Checkbox>
@@ -783,7 +783,7 @@ class ProjectDetails extends React.Component {
                                                     value={this._getAttribute('GasWork').toString()}
                                                     checked={(this._getAttribute('GasWork') === 1) ? true : false}
                                                     onChange={this._handleCheckboxEvent.bind(this)}
-                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0)}
+                                                    disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)}
                                                     fullWidth
                                                 > Gas Work
                                             </Checkbox>
@@ -804,7 +804,7 @@ class ProjectDetails extends React.Component {
                                                 onBlur={this._onBlur.bind(this)}
                                                 //value={ this._getAttribute('Construction_Notes')}
                                                 onChange={this._handleChangeEvent.bind(this)}
-                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0)} 
+                                                disabled={!(Object.keys(this.props.selectedFeature).length > 0 && !this.props.editButton)} 
                                             />
                                     </Form>
                                 </CardContent>
@@ -830,7 +830,8 @@ const mapStateToProps = state => ({
     optionsInspectors: parseEmployeesData(state, 'inspectors'),
     employees: parseEmployeesData(state, 'all'),
     contractors: parseContractorData(state),
-    saveButton: state.attributes.saveButton
+    saveButton: state.attributes.saveButton,
+    editButton: state.attributes.editButton
 });
 
 const mapDispatchToProps = dispatch => {

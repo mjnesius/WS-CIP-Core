@@ -345,12 +345,9 @@ class Map extends Component {
   }
 
    showPopup = (response) => {
-    // features: response,
-    //     location: event.mapPoint
     console.log("showPopup(response): ", response);
 
-
-    if (response.length > 0) {
+    if(this.view.popup.features.length > 0 && response.length > 0){
       this.view.popup.open({
         features : [...this.view.popup.features,...response],
         featureNavigationEnabled : true,
@@ -358,92 +355,143 @@ class Map extends Component {
         dockEnabled : true,
         highlightEnabled: true
       })
+    }
+    else if (response.length > 0) {
+      this.view.popup.open({
+        features : response,
+        featureNavigationEnabled : true,
+        defaultPopupTemplateEnabled: true,
+        dockEnabled : true,
+        highlightEnabled: true
+      });
+      this.view.popup.viewModel.features = response;
+      this.view.popup.viewModel.highlightEnabled = true;
     } 
     document.getElementById("map-view-container").style.cursor = "default";
   }
 
   executeIdentifyTask = (event) => {
-    loadModules([ 'esri/tasks/IdentifyTask',
-    'esri/tasks/support/IdentifyParameters', 'esri/tasks/GeometryService', 
-    'esri/tasks/support/ProjectParameters', 'esri/geometry/SpatialReference'
+    loadModules(['esri/tasks/IdentifyTask',
+      'esri/tasks/support/IdentifyParameters', 'esri/tasks/GeometryService',
+      'esri/tasks/support/ProjectParameters', 'esri/geometry/SpatialReference'
     ])
-    .then( ([  IdentifyTask, IdentifyParameters, GeometryService, ProjectParameters, SpatialReference
-    ]) => { 
-      var identifyTask, idParams;
-      // Create identify task for the specified map service
-      identifyTask = new IdentifyTask(this.props.config.identifyURL[0]);
+      .then(([IdentifyTask, IdentifyParameters, GeometryService, ProjectParameters, SpatialReference
+      ]) => {
+        var identifyTask, idParams;
+        // Create identify task for the specified map service
+        identifyTask = new IdentifyTask(this.props.config.identifyURL[0]);
 
-      // Set the parameters for the Identify
-      idParams = new IdentifyParameters();
-      idParams.tolerance = 3;
-      idParams.layerOption = "visible";
-      idParams.layerIds = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,
-        23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,
-        49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,
-        75,76,77,78,79,80,81,82,83]; 
-      idParams.width = this.view.width;
-      idParams.height = this.view.height;
-      idParams.returnGeometry = true;
-      // Set the geometry to the location of the view click
-      console.log("event: ", event, " url: ", this.props.config.identifyURL[0])
-      console.log("mapPoint: ", event.mapPoint);
-      // const cs1 = new SpatialReference({
-      //   wkid: 3857 //web mercator
-      // });
+        // Set the parameters for the Identify
+        idParams = new IdentifyParameters();
+        idParams.tolerance = 3;
+        idParams.layerOption = "visible";
+        const vizLayerIDs = [];
+        // build layer ID list (they're nested sublayers, so it won't work automatically)
+        this.view.allLayerViews.forEach(vw => {
+          console.log("checking layer: " + vw.layer.title);
+          if (vw.layer.title === "COT Inter CityworksAllActive D SP") {
+            const subLayers = vw.layer.sublayers;
+            if (vw.visible & subLayers.length > 0) {
+              console.log("checking " + subLayers.length + " sublayers for: " + vw.layer.title );
+              subLayers.forEach(lyr => {
+                
+                const subLayers2 = lyr.sublayers;
+                if (!lyr.visible) {/* skip */}
+                else if (lyr.visible && !subLayers2){
+                  console.log("adding id: " + lyr.id + " for layer: " + lyr.title );
+                  vizLayerIDs.push(lyr.id);
+                }
+                else if (lyr.visible && subLayers2){
+                  console.log("checking " + subLayers2.length + " sublayers for: " + lyr.title );
+                  subLayers2.forEach(lyr => {
+                    const subLayers3 = lyr.sublayers;
+                    if (!lyr.visible) {/* skip */}
+                    else if (lyr.visible && !subLayers3){
+                      console.log("adding id: " + lyr.id + " for layer: " + lyr.title );
+                      vizLayerIDs.push(lyr.id);
+                    }
+                    else if (lyr.visible && subLayers3 ){
+                      subLayers3.forEach(lyr => {
+                        const subLayers4 = lyr.sublayers;
+                        console.log("checking " + subLayers4.length + " sublayers for: " + lyr.title );
+                        if (lyr.visible && subLayers4.length < 1){
+                          console.log("adding id: " + lyr.id + " for layer: " + lyr.title );
+                          vizLayerIDs.push(lyr.id);
+                        }
+                      })
+                    }
+                  })
+                }
+              })
+            }
+          }
 
-      // const cs2 = new SpatialReference({
-      //   wkid: 2883 // state plane
-      // });
+        });
+        // idParams.layerIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+        //   25, 26, 27, 28, 29, 31, 33, 34, 36, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
+        //   49, 50, 51, 52, 53, 54, 55, 56, 58, 59, 60, 61, 62, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74,
+        //   75, 76, 77, 78, 79, 80, 81, 82, 83];
+        console.log("vizLayerIDs: " + vizLayerIDs);
+        idParams.layerIds = vizLayerIDs;
+        idParams.width = this.view.width;
+        idParams.height = this.view.height;
+        idParams.returnGeometry = true;
+        // Set the geometry to the location of the view click
+        console.log("event: ", event, " url: ", this.props.config.identifyURL[0])
+        console.log("mapPoint: ", event.mapPoint);
 
-      //params.geometry = event.mapPoint;
+        document.getElementById("map-view-container").style.cursor = "wait";
+        idParams.geometry = event.mapPoint;
+        idParams.mapExtent = this.view.extent;
+        identifyTask
+          .execute(idParams)
+          .then(response => {
+            var results = response.results;
+            console.log("results.length: " + results.length + ", results: " + results);
 
-      document.getElementById("map-view-container").style.cursor = "wait";
-      idParams.geometry = event.mapPoint;
-      idParams.mapExtent = this.view.extent;
-      identifyTask
-        .execute(idParams)
-        .then(function (response) {
-          var results = response.results;
-
-          return results.map(function (result) {
-            var feature = result.feature;
-            var layerName = result.layerName;
-            console.log("result.layername: ", result.layerName)
-            console.log("feature: ", feature, " feature.fields: " + feature.fields)
-            console.log("feature.attributes: ", feature.attributes)
-            feature.attributes.layerName = layerName;
-            var fieldInfos = [];
-            for (var k in feature.attributes) {
-              
+            return results.map(function (result) {
+              var feature = result.feature;
+              var layerName = result.layerName;
+              console.log("feature.attributes: ", feature.attributes);
+              feature.attributes.layerName = layerName;
+              console.log("feature.symbol: ", feature.symbol);
+              // var symbol= {
+              //   type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              //   color: ,
+              //   size: 8,
+              //   outline: { // autocasts as new SimpleLineSymbol()
+              //     width: 0.5,
+              //     color: "darkblue"
+              //   }
+              // }
+              feature.symbol.color = [255, 255, 0, 1];
+              var fieldInfos = [];
+              for (var k in feature.attributes) {
                 fieldInfos.push({
                   fieldName: k
-                 })
-              
-            }
-            console.log(fieldInfos)
-            feature.popupTemplate = {
-              // autocasts as new PopupTemplate()
-              title: layerName,
-              content: [{
-                type: "fields",
-                fieldInfos: fieldInfos
-              }],
-              outFields: ["*"],
-              highlightEnabled: true
-            }
+                })
+              }
+              console.log(fieldInfos)
+              feature.popupTemplate = {
+                // autocasts as new PopupTemplate()
+                title: layerName,
+                content: [{
+                  type: "fields",
+                  fieldInfos: fieldInfos
+                }],
+                outFields: ["*"]
+              }
 
-            return feature;
-          });
+              return feature;
+            })
         }).then(this.showPopup);
-
-
-  })}
+      })
+  }
 
   setupEventHandlers = (view, map) => {
     
     console.log("setupEventHandlers()\tprops\t", this.props);
     view.on("click", this.executeIdentifyTask);
-
     view.popup.on("trigger-action",  (event) => {
       console.log(event);
       console.log(event.action);
