@@ -99,14 +99,55 @@ function initMap(mapConfig, node) {
             esriLoader.loadModules([
                 'esri/WebMap',
                 'esri/views/MapView',
-                'esri/geometry/Extent'
-            ]).then( ([WebMap, MapView, Extent]) => {
+                'esri/geometry/Extent', 'esri/layers/MapImageLayer'
+            ]).then( ([WebMap, MapView, Extent, MapImageLayer]) => {
 
-                const webmap = new WebMap({
+                var webmap = new WebMap({
                     portalItem: {
                         id: mapConfig.id
                     }
                 });
+                var layer = new MapImageLayer({
+                    url: mapConfig.uupiLyr,
+                    visible: false
+
+                });
+                layer.load().then(() => {
+                    try {
+                        console.log("layer title: " + layer.title + ", allsublayers: " + layer.allSublayers.length + ", visible: " + layer.visible + " type: " + layer.type);
+                        console.log("layer title: " + layer.title + "sublayers: " + layer.sublayers);
+                        var serviceSublayers = layer.createServiceSublayers();
+                        layer.sublayers = serviceSublayers;
+                        var i = 0;
+                        console.log("subLayers " + layer.sublayers.length);
+                        layer.sublayers.forEach(subLyr => {
+                            console.log(i);
+                            i++;
+
+                            subLyr.popupEnabled = true;
+                            subLyr.visible = true;
+                            console.log("\tsublayer title: " + subLyr.title + ", sublayers: " + subLyr.sublayers + ", visible: " + subLyr.visible)
+                            if (subLyr.sublayers) {
+                                try {
+                                    var subLyr2 = subLyr.sublayers;
+                                    subLyr2.forEach(subLyr3 => {
+                                        subLyr3.popupEnabled = true;
+                                        subLyr3.visible = true;
+                                        subLyr3.minscale = 3000;
+                                        console.log("\t\tsublayer2 title: " + subLyr3.title + ", sublayers: " + subLyr3.sublayers + ", visible: " + subLyr3.visible)
+                                    })
+                                } catch (e) {
+                                    console.error(e)
+                                }
+
+                            }
+                        });
+                        webmap.layers.add(layer);
+                    }
+                    catch (e) {
+                        console.error(e)
+                    }
+                })
 
                 new MapView({
                     container: node,
@@ -122,6 +163,7 @@ function initMap(mapConfig, node) {
                         reject(error);
                     }
                 );
+
             });
         });
     }

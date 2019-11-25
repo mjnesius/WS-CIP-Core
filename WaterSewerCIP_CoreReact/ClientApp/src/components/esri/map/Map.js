@@ -28,27 +28,11 @@ import { createView } from '../../../utils/esriHelper';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-//import { stat } from 'fs';
-//import yargs from 'yargs';
-//import PencilSquare16 from '@esri/calcite-ui-icons';
-//import { annotateTool24 } from "@esri/calcite-ui-icons";
-//import PencilSquareIcon from 'calcite-ui-icons-react/PencilSquareIcon';
-//import FilterComponent from '../../Filters';
 import TableIcon from 'calcite-ui-icons-react/TableIcon';
-//import { truncate } from 'fs';
 const Container = styled.div`
   height: 100%;
   width: 100%;
 `;
-
-// const SVG =({
-//   style = {},
-//   fill = '#fff',
-//   width = '100%',
-//   className = 'svg-icon-light-blue',
-//   height = '100%',
-//   viewBox = '0 0 16 16',
-// }) =><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" className="svg-icon-light-blue"><path d="M2 2v26h30V2H2zm14 7.999h6V14h-6V9.999zM16 16h6v4h-6v-4zm-2 10H4v-4h10v4zm0-6H4v-4h10v4zm0-6H4V9.999h10V14zm2 12v-4h6v4h-6zm14 0h-6v-4h6v4zm0-6h-6v-4h6v4zm0-6h-6V9.999h6V14z"/></svg>
 
 
 // Variables
@@ -183,13 +167,15 @@ class Map extends Component {
           }
           ]
         }],
-        actions: actionsButtons
+        actions: actionsButtons,
+        overwriteActions: true
       }
       const featureLayer = new FeatureLayer({
         outFields: ["*"],
         url: this.props.config.featureURLs[0],
         title: "WaterSewerPM",
         id: "projects",
+        refreshInterval: 0.1,
         popupTemplate: popTemplate
       });
 
@@ -366,10 +352,11 @@ class Map extends Component {
 
     if (response.length > 0) {
       this.view.popup.open({
-        features : response,
+        features : [...this.view.popup.features,...response],
         featureNavigationEnabled : true,
         defaultPopupTemplateEnabled: true,
-        dockEnabled : true
+        dockEnabled : true,
+        highlightEnabled: true
       })
     } 
     document.getElementById("map-view-container").style.cursor = "default";
@@ -389,53 +376,67 @@ class Map extends Component {
       // Set the parameters for the Identify
       idParams = new IdentifyParameters();
       idParams.tolerance = 3;
-      idParams.layerOption = "top";
+      idParams.layerOption = "visible";
       idParams.layerIds = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,
         23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,
         49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,
-        75,76,77,78,79,80,81,82,83];
+        75,76,77,78,79,80,81,82,83]; 
       idParams.width = this.view.width;
       idParams.height = this.view.height;
-      //idParams.returnGeometry = true;
+      idParams.returnGeometry = true;
       // Set the geometry to the location of the view click
       console.log("event: ", event, " url: ", this.props.config.identifyURL[0])
       console.log("mapPoint: ", event.mapPoint);
       // const cs1 = new SpatialReference({
       //   wkid: 3857 //web mercator
       // });
-      
+
       // const cs2 = new SpatialReference({
       //   wkid: 2883 // state plane
       // });
 
       //params.geometry = event.mapPoint;
-      
+
       document.getElementById("map-view-container").style.cursor = "wait";
       idParams.geometry = event.mapPoint;
       idParams.mapExtent = this.view.extent;
       identifyTask
-            .execute(idParams)
-            .then(function(response) {
-              var results = response.results;
+        .execute(idParams)
+        .then(function (response) {
+          var results = response.results;
 
-              return results.map(function(result) {
-                var feature = result.feature;
-                var layerName = result.layerName;
-                console.log("result.layername: ", result.layerName)
-                console.log("feature: ", feature)
-                console.log("feature.attributes: ", feature.attributes)
-                feature.attributes.layerName = layerName;
-                feature.popupTemplate = {
-                  // autocasts as new PopupTemplate()
-                  title: layerName,
-                  content: '<p>' + JSON.stringify(feature.attributes) + "</p>"
-                }
-                
-                return feature;
-              });
-            }).then(this.showPopup);
+          return results.map(function (result) {
+            var feature = result.feature;
+            var layerName = result.layerName;
+            console.log("result.layername: ", result.layerName)
+            console.log("feature: ", feature, " feature.fields: " + feature.fields)
+            console.log("feature.attributes: ", feature.attributes)
+            feature.attributes.layerName = layerName;
+            var fieldInfos = [];
+            for (var k in feature.attributes) {
+              
+                fieldInfos.push({
+                  fieldName: k
+                 })
+              
+            }
+            console.log(fieldInfos)
+            feature.popupTemplate = {
+              // autocasts as new PopupTemplate()
+              title: layerName,
+              content: [{
+                type: "fields",
+                fieldInfos: fieldInfos
+              }],
+              outFields: ["*"],
+              highlightEnabled: true
+            }
 
-            
+            return feature;
+          });
+        }).then(this.showPopup);
+
+
   })}
 
   setupEventHandlers = (view, map) => {
